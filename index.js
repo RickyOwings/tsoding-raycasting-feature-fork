@@ -121,6 +121,19 @@ async function loadImageData(url) {
             }
         }
     });
+    window.addEventListener("mousemove", (e) => {
+        const pointerIsLocked = (document.pointerLockElement === gameCanvas);
+        const mouseSensitivity = 0.3;
+        if (pointerIsLocked) {
+            player.turningFactor = e.movementX * mouseSensitivity;
+        }
+        else {
+            player.turningFactor = 0;
+        }
+    });
+    gameCanvas.addEventListener("click", () => {
+        gameCanvas.requestPointerLock();
+    });
     let prevTimestamp = 0;
     const frame = (timestamp) => {
         const deltaTime = (timestamp - prevTimestamp) / 1000;

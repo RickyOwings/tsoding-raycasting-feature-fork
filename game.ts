@@ -315,6 +315,7 @@ export interface Player {
     movingBackward: boolean;
     turningLeft: boolean;
     turningRight: boolean;
+    turningFactor: number;
 }
 
 export function createPlayer(position: Vector2, direction: number): Player {
@@ -326,6 +327,7 @@ export function createPlayer(position: Vector2, direction: number): Player {
         movingBackward: false,
         turningLeft: false,
         turningRight: false,
+        turningFactor: 0,
     }
 }
 
@@ -607,6 +609,10 @@ export function renderGame(display: Display, deltaTime: number, player: Player, 
     }
     if (player.turningRight) {
         angularVelocity += Math.PI;
+    }
+    if (Math.abs(player.turningFactor) > Math.abs(angularVelocity)) {
+        angularVelocity = player.turningFactor;
+        player.turningFactor = 0;
     }
     player.direction = player.direction + angularVelocity*deltaTime;
     const nx = player.position.x + player.velocity.x*deltaTime;

@@ -95,6 +95,7 @@ async function loadImageData(url: string): Promise<ImageData> {
             }
         }
     });
+
     window.addEventListener("keyup", (e) => {
         if (!e.repeat) {
             switch (e.code) {
@@ -104,6 +105,21 @@ async function loadImageData(url: string): Promise<ImageData> {
                 case 'ArrowRight': case 'KeyD': player.turningRight   = false; break;
             }
         }
+    });
+
+    window.addEventListener("mousemove", (e) => {
+        const pointerIsLocked: boolean = (document.pointerLockElement === gameCanvas);    
+        const mouseSensitivity = 0.3;
+        if (pointerIsLocked) {
+            player.turningFactor = e.movementX * mouseSensitivity;
+        } else {
+            player.turningFactor = 0;
+        }
+    });
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/Pointer_Lock_API 
+    gameCanvas.addEventListener("click", () => {
+        gameCanvas.requestPointerLock();
     });
 
     let prevTimestamp = 0;

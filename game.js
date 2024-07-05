@@ -267,6 +267,7 @@ export function createPlayer(position, direction) {
         movingBackward: false,
         turningLeft: false,
         turningRight: false,
+        turningFactor: 0,
     };
 }
 function playerFovRange(player) {
@@ -505,6 +506,10 @@ export function renderGame(display, deltaTime, player, scene, sprites) {
     }
     if (player.turningRight) {
         angularVelocity += Math.PI;
+    }
+    if (Math.abs(player.turningFactor) > Math.abs(angularVelocity)) {
+        angularVelocity = player.turningFactor;
+        player.turningFactor = 0;
     }
     player.direction = player.direction + angularVelocity * deltaTime;
     const nx = player.position.x + player.velocity.x * deltaTime;
