@@ -17,6 +17,7 @@ const FOV = Math.PI*0.5;
 const COS_OF_HALF_FOV = Math.cos(FOV*0.5);
 const PLAYER_STEP_LEN = 0.5;
 const PLAYER_SPEED = 2;
+const PLAYER_STRAFE_SPEED = PLAYER_SPEED / 1.2;
 
 const MINIMAP_SPRITES = false;
 const MINIMAP_PLAYER_SIZE = 0.5;
@@ -313,8 +314,9 @@ export interface Player {
     direction: number;
     movingForward: boolean;
     movingBackward: boolean;
-    turningLeft: boolean;
-    turningRight: boolean;
+    leftButton: boolean;
+    rightButton: boolean;
+    usingMouse: boolean;
     turningFactor: number;
 }
 
@@ -325,8 +327,9 @@ export function createPlayer(position: Vector2, direction: number): Player {
         direction: direction,
         movingForward: false,
         movingBackward: false,
-        turningLeft: false,
-        turningRight: false,
+        leftButton: false,
+        rightButton: false,
+        usingMouse: false,
         turningFactor: 0,
     }
 }
@@ -604,12 +607,23 @@ export function renderGame(display: Display, deltaTime: number, player: Player, 
     if (player.movingBackward) {
         player.velocity.sub(new Vector2().setAngle(player.direction, PLAYER_SPEED))
     }
-    if (player.turningLeft) {
-        angularVelocity -= Math.PI;
+
+    // Depending on if player is using mouse, either do the original movement mechanics without mouse or one with mouse and strafing
+    if (player.usingMouse) {
+        angularVelocity = player.turningFactor;
+        player.turningFactor = 0;
+
+        player.velocity.add(
+            new Vector2().setAngle(
+                player.direction + Math.PI / 2, 
+                PLAYER_STRAFE_SPEED * (+player.rightButton - +player.leftButton)
+            ));
+
+
+    } else {
+        angularVelocity = Math.PI * (+player.rightButton - +player.leftButton);
     }
-    if (player.turningRight) {
-        angularVelocity += Math.PI;
-    }
+
     if (Math.abs(player.turningFactor) > Math.abs(angularVelocity)) {
         angularVelocity = player.turningFactor;
         player.turningFactor = 0;

@@ -90,8 +90,8 @@ async function loadImageData(url: string): Promise<ImageData> {
             switch (e.code) {
                 case 'ArrowUp':    case 'KeyW': player.movingForward  = true; break;
                 case 'ArrowDown':  case 'KeyS': player.movingBackward = true; break;
-                case 'ArrowLeft':  case 'KeyA': player.turningLeft    = true; break;
-                case 'ArrowRight': case 'KeyD': player.turningRight   = true; break;
+                case 'ArrowLeft':  case 'KeyA': player.leftButton     = true; break;
+                case 'ArrowRight': case 'KeyD': player.rightButton    = true; break;
             }
         }
     });
@@ -101,16 +101,16 @@ async function loadImageData(url: string): Promise<ImageData> {
             switch (e.code) {
                 case 'ArrowUp':    case 'KeyW': player.movingForward  = false; break;
                 case 'ArrowDown':  case 'KeyS': player.movingBackward = false; break;
-                case 'ArrowLeft':  case 'KeyA': player.turningLeft    = false; break;
-                case 'ArrowRight': case 'KeyD': player.turningRight   = false; break;
+                case 'ArrowLeft':  case 'KeyA': player.leftButton     = false; break;
+                case 'ArrowRight': case 'KeyD': player.rightButton    = false; break;
             }
         }
     });
 
     window.addEventListener("mousemove", (e) => {
-        const pointerIsLocked: boolean = (document.pointerLockElement === gameCanvas);    
+        player.usingMouse = (document.pointerLockElement === gameCanvas);    
         const mouseSensitivity = 0.3;
-        if (pointerIsLocked) {
+        if (player.usingMouse) {
             player.turningFactor = e.movementX * mouseSensitivity;
         } else {
             player.turningFactor = 0;

@@ -90,11 +90,11 @@ async function loadImageData(url) {
                     break;
                 case 'ArrowLeft':
                 case 'KeyA':
-                    player.turningLeft = true;
+                    player.leftButton = true;
                     break;
                 case 'ArrowRight':
                 case 'KeyD':
-                    player.turningRight = true;
+                    player.rightButton = true;
                     break;
             }
         }
@@ -112,19 +112,19 @@ async function loadImageData(url) {
                     break;
                 case 'ArrowLeft':
                 case 'KeyA':
-                    player.turningLeft = false;
+                    player.leftButton = false;
                     break;
                 case 'ArrowRight':
                 case 'KeyD':
-                    player.turningRight = false;
+                    player.rightButton = false;
                     break;
             }
         }
     });
     window.addEventListener("mousemove", (e) => {
-        const pointerIsLocked = (document.pointerLockElement === gameCanvas);
+        player.usingMouse = (document.pointerLockElement === gameCanvas);
         const mouseSensitivity = 0.3;
-        if (pointerIsLocked) {
+        if (player.usingMouse) {
             player.turningFactor = e.movementX * mouseSensitivity;
         }
         else {
